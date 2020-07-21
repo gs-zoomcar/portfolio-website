@@ -6,6 +6,7 @@ import VueTypedJs from 'vue-typed-js'
 import App from "./App.vue";
 import store from "./store/store";
 import router from "./routes";
+import "normalize.css"
 
 Vue.use(VueResource);
 Vue.use(Vuex);
@@ -14,7 +15,7 @@ Vue.use(VueTypedJs);
 
 Vue.directive("infocus", {
   isLiteral: true,
-  inserted: (el, binding, vnode) => {
+  inserted: (el, binding) => {
     let f = () => {
       let rect = el.getBoundingClientRect();
       let inView =

@@ -1,7 +1,7 @@
 <template>
   <div class="page-header">
     <div v-show="true">
-      <b :style="{'color': currentColor}">New!</b> Read tech blogs <a href="https://tech.gaurav.app" target="_blank">here!</a>
+      <b :style="{'color': currentColor}">New!</b> Read tech blogs <a href="https://tech.gaurav.app" target="blank">here!</a>
     </div>
     <header class="main-header" :class="{'main-header__shadow': isAtTop}">
       <div class="main-header__wrapper">
@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="main-header__item main-header__email">
-          <a href="mailto:hello@gauravsaini.dev" target="blank">
+          <a @click="openContactMeDialog">
             <i class="fa fa-envelope-o" style="font-size:1.5rem"></i>
             <span class="main-header__item-text">Contact me!</span>
           </a>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return { position: 0, currentColor: '#FFF', colorsEnum: ['#FFF', '#87FD05', '#FE02A2', '#FF3503', '#00A0A0', '#FB9214, #07D5E6'] };
@@ -46,6 +47,11 @@ export default {
       return this.position > 20;
     }
   }, 
+  methods: {
+    openContactMeDialog() {
+      this.$store.dispatch('setContactMeDialog', true);
+    }
+  },
   watch: {
     position() {
       let vm = this;
@@ -66,7 +72,7 @@ export default {
   position: fixed;
   z-index: 100000;
   top: 0;
-  min-width: 20rem;
+  min-width: 25rem;
   width: 100%;
 }
 
@@ -119,10 +125,7 @@ export default {
   transition: 0.5s all;
   color: white;
   text-decoration: none;
-}
-
-.main-header__item a:hover {
-  color: #aaa;
+  cursor: pointer;
 }
 
 .main-header__item-text {
@@ -143,14 +146,10 @@ export default {
     color: #333;
   }
   .main-header__item a {
-    color: inherit;
     display: flex;
     align-items: center;
   }
 
-  .main-header__item a:hover {
-    color: inherit;
-  }
   .main-header__item a i {
     padding-left: 0.3rem;
     padding-right: 0.3rem;

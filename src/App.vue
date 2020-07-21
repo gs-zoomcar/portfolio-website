@@ -1,88 +1,111 @@
 <template>
   <div id="app">
-    <app-header/>
+    <app-header />
+    <transition name="fade" mode="out-in">
+      <div v-if="contactMeDialog" class="page-shield"></div>
+    </transition>
     <keep-alive exclude="blog-complete">
       <transition name="fade" mode="out-in">
-        <router-view/>
+        <router-view />
       </transition>
     </keep-alive>
-    <app-footer/>
+    <contact-me />
+    <app-footer />
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
+import contactMe from "./components/ContactMe.vue";
 
 export default {
   name: "app",
   components: {
     appHeader: Header,
-    appFooter: Footer
+    appFooter: Footer,
+    contactMe
+  },
+  computed: {
+    contactMeDialog() {
+      return this.$store.state.contactMeDialog;
+    }
   },
   created() {
-    var prev = -1;
     const day = this.$store.state.day,
       evening = this.$store.state.evening,
       night = this.$store.state.night;
+
+    let prev = -1;
     setInterval(() => {
       const hour = new Date().getHours();
       if (hour != prev) {
         if (hour >= night || hour < day) {
           document.getElementsByTagName("html")[0].className = "night";
+          document.body.className = "night-font";
         } else if (hour >= evening && hour < night) {
           document.getElementsByTagName("html")[0].className = "dark";
+          document.body.className = "night-font";
         } else {
           document.getElementsByTagName("html")[0].className = "";
+          document.body.className = "";
         }
         prev = hour;
       }
-    }, 1500);
+    }, 1000);
   }
 };
 </script>
-
 <style>
 * {
   box-sizing: border-box;
 }
-
 html {
   font-family: "Open Sans", "Calibri", sans-serif;
-  color: #333;
   transition: 0.5s background-color;
-  --accent-color: rgb(255, 161, 38);
+  font-display: swap;
 }
-
 .night {
   background: black;
-  color: rgb(173, 173, 173);
+  --background-color: black;
+  color: #fff;
+  --text-color: #eee;
   --shadow-color: rgba(255, 255, 255, 0.15);
 }
-
+.night-font {
+  color: #eee;
+  --text-color: #eee;
+}
 .dark {
   background: #262d41;
+  --background-color: #262d41;
   color: #eee;
+  --text-color: #eee;
 }
-
 .light-a {
   color: #333;
 }
-
 .dark-a {
   color: #eee;
 }
-
 body {
   margin: 0;
+  transition: 2s background-color, color;
 }
-
 .active {
   color: var(--accent-color) !important;
 }
-
 .float-animation {
   animation: float-slow 10s linear infinite;
+}
+.page-shield {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  height: 100vh;
+  z-index: 2;
+  overflow: hidden;
 }
 
 @keyframes float-slow {
@@ -93,7 +116,7 @@ body {
     transform: translateX(-6px);
   }
   20% {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
   }
   30% {
     transform: translateX(4px) translateY(2px);
@@ -120,14 +143,12 @@ body {
     transform: translateX(+4px) translateY(-2px);
   }
 }
-
 .fade-enter-active {
   animation: fade-in 100ms ease-out forwards;
 }
 .fade-leave-active {
   animation: fade-out 100ms ease-out forwards;
 }
-
 @keyframes fade-in {
   from {
     opacity: 0;

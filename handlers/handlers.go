@@ -32,7 +32,7 @@ func init() {
 }
 
 func Register(g *gin.Engine) {
-	api := g.Group("/api")
+	api := g.Group("/api", cacheSetter(90*time.Minute))
 	{
 		api.GET("/blogs", returnBlogPosts)
 		api.POST("/blog", verifyCredentials, addBlogPost)
@@ -52,7 +52,8 @@ func Register(g *gin.Engine) {
 		api.GET("/repos", getGithubReposHandler)
 		api.GET("/wordpress", getWordpressPostsHandler)
 		api.GET("/wordpress/:id", getWordpressPostbyIDHandler)
-		api.POST("admin/data/refresh", verifyCredentials, refreshData)
+		api.POST("/email", sendEmail)
+		api.POST("/admin/data/refresh", verifyCredentials, refreshData)
 	}
 	g.GET("/health", func(c *gin.Context) {
 		c.AbortWithStatus(http.StatusOK)

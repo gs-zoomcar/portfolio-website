@@ -10,7 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/metamemelord/portfolio-website/handlers"
-	"github.com/metamemelord/portfolio-website/worker"
+	"github.com/metamemelord/portfolio-website/pkg/worker"
 )
 
 func init() {
@@ -82,6 +82,9 @@ func init() {
 
 func main() {
 	g := gin.New()
+
+	g.Use(gin.LoggerWithWriter(os.Stdout))
+
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
 		PORT = "3000"
@@ -96,6 +99,6 @@ func main() {
 			time.Sleep(2 * time.Hour)
 		}
 	}()
-	go worker.KeepAlive(20 * time.Second)
+	go worker.KeepAlive(time.Minute)
 	_ = g.Run(PORT)
 }
